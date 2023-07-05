@@ -3,12 +3,12 @@
 
 
 import { useWeb3 } from "@components/providers"
-import Link from "next/link"
 import Button from "@components/ui/common/button"
 import { useAccount } from "@components/hooks/web3"
 
 // hide address on specific routes
 import { useRouter } from "next/router"
+import ActiveLink from "../link"
 
 
  
@@ -24,32 +24,32 @@ export default function Navbar() {
         <nav className="relative" aria-label="Global">
           <div className="flex justify-between items-center">
             <div>
-              <Link legacyBehavior href="/" >
+              <ActiveLink legacyBehavior href="/" >
                 <a
                   className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Home
                 </a>
-              </Link>
-              <Link legacyBehavior href="/marketplace" >
+              </ActiveLink>
+              <ActiveLink legacyBehavior href="/marketplace" >
                 <a
                   className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Marketplace
                 </a>
-              </Link>
-              <Link legacyBehavior href="/" >
+              </ActiveLink>
+              <ActiveLink legacyBehavior href="/blog" >
                 <a
                   className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Blogs
                 </a>
-              </Link>
+              </ActiveLink>
             </div>
             <div>
-              <Link legacyBehavior href="/" >
+              <ActiveLink legacyBehavior href="/wishlist" >
                 <a
                   className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Wishlist
                 </a>
-              </Link>
+              </ActiveLink>
               
               { isLoading ? 
                 <Button

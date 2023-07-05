@@ -1,0 +1,26 @@
+using individual network hooks in the marketplace===
+
+import { useAccount, useNetwork } from "@components/hooks/web3"
+
+
+
+
+export default Marketplace({courses}) {
+    //pass user account to wallet bar
+    const { account } = useAccount()
+    const { network } = useNetwork()
+
+    // Disable btn when user is not connected or connected to wrong network
+    const canPurchaseCourse = !!(account.data && network.isSupported)
+
+    return(
+        <WalletBar 
+          address={account.data}
+          network={{
+            data: network.data,
+            target: network.target,
+            isSupported: network.isSupported,
+            hasFirstResponse: network.hasFirstResponse,
+          }}/>
+    )
+}

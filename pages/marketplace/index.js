@@ -1,49 +1,39 @@
 
-import { Button, Hero, Modal } from "@components/ui/common"
-import { CourseCard, CourseList } from "@components/ui/course"
-import { OrderModal } from "@components/ui/order"
-
-import { BaseLayout } from "@components/ui/layout"
-import { EthRates, WalletBar } from "@components/ui/web3"
-
-import { getAllCourses } from "@content/courses/fetcher"
-import { useAccount, useNetwork } from "@components/hooks/web3"
-
-import { useEthPrice } from "@components/hooks/useEthPrice"
 
 import { useState } from "react"
 
+import { Breadcrumbs, Button, Hero, Modal } from "@components/ui/common"
+import { CourseCard, CourseList } from "@components/ui/course"
+import { OrderModal } from "@components/ui/order"
+
+import { MarketHeader } from "@components/ui/marketplace"
+
+import { BaseLayout } from "@components/ui/layout"
+
+// Fetch Courses
+import { getAllCourses } from "@content/courses/fetcher"
+
+// use metamask hooks at once
+import { useWalletInfo } from "@components/hooks/web3"
 
 
 export default function Marketplace({courses}) {
   // Handling modal events
   const [selectedCourse, setSelectedCourse] = useState(null)
-	//pass user account to wallet bar
-	const { account } = useAccount()
-  const { network } = useNetwork()
-  // fetch eth price data
-  const { eth } = useEthPrice()
-  
-  // Disable btn when user is not connected or connected to wrong network
-  const canPurchaseCourse = !!(account.data && network.isSupported)
+	
+  // use metamask hooks at once
+  const {canPurchaseCourse} = useWalletInfo()
+
+  // get purchase details
+  const purchaseCourse = (order)=> {
+    alert(JSON.stringify(order))
+  }
 
 
   return (
     <>
       <div className="py-4">
-        <WalletBar
-          address={account.data}
-          network={{
-            data: network.data,
-            target: network.target,
-            isSupported: network.isSupported,
-            hasFirstResponse: network.hasFirstResponse,
-          }}
-        />
-        <EthRates 
-          eth={eth.data}
-          perItem={eth.perItem}
-        />
+       <MarketHeader />
       </div>
       {/* Having different course list in different pages */}
       <CourseList courses={courses}>
@@ -72,6 +62,7 @@ export default function Marketplace({courses}) {
       {selectedCourse ? 
         <OrderModal 
           course={selectedCourse} 
+          onSubmit={purchaseCourse}
           onClose={ ()=> setSelectedCourse(null)}
         /> : ""}
     </>
