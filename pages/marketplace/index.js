@@ -13,20 +13,39 @@ import { BaseLayout } from "@components/ui/layout"
 // Fetch Courses
 import { getAllCourses } from "@content/courses/fetcher"
 
+import { useWeb3 } from "@components/providers"
+
 // use metamask hooks at once
 import { useWalletInfo } from "@components/hooks/web3"
 
 
 export default function Marketplace({courses}) {
-  // Handling modal events
-  const [selectedCourse, setSelectedCourse] = useState(null)
+  const {web3} = useWeb3()
 	
   // use metamask hooks at once
-  const {canPurchaseCourse} = useWalletInfo()
+  const {canPurchaseCourse, account} = useWalletInfo()
 
+  // Handling modal events
+  const [selectedCourse, setSelectedCourse] = useState(null)
+  
   // get purchase details
   const purchaseCourse = (order)=> {
-    alert(JSON.stringify(order))
+    // alert(JSON.stringify(order))
+    const hexCourseId = web3.utils.utf8ToHex(selectedCourse.id)
+
+    // courseHash
+    const orderHash = web3.utils.soliditySha3(
+      { type: "byte16", value: hexCourseId},
+      { type: "address", value: account.data}
+    )
+    // emailHash
+    const emailHash = web3.utils.sha3(order.email)
+
+    // construct proof = emailHash + courseHash
+    const proof = web3.utils.soliditySha3(
+      { type: "bytes32", value: emailHash },
+      { type: "bytes32", value: orderHash }
+    )
   }
 
 

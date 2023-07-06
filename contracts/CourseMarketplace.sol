@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
+
+// creating the state variables
 contract CourseMarketplace {
 
   enum State {
@@ -22,15 +24,47 @@ contract CourseMarketplace {
 
   // mapping of courseId to courseHash
   mapping(uint => bytes32) private ownedCoursHash;
-
+  
   // number of all courses + id of the course
   uint private totalOwnedCourses;
 
-  function purchaeCourse (bytes16 courseId, bytes32 proof ) external payable {
+  // administartor of the contract
+  address payable private owner;
 
-    bytes32 courseHash = keccak256(abi.encodePacked(courseId, msg.sender));
-    uint id = totalOwnedCourses++;
+  constructor() {
+    setContractOwner(msg.sender);
+  }
+
+  /// Errors- Course already has a owner
+  error CourseHasOwner();
+
+  /// Only owner can transfer
+  error OnlyOwner();
+
+  // only owner should be able to transfer ownership
+  modifier onlyOwner() {
+    if(msg.sender != getContractOwner()) {
+      revert OnlyOwner();
+    }
+    _;
+  }
+
+  //  Purchase State
+  function purchaseCourse (bytes16 courseId, bytes32 proof ) external payable {  
+    //0x00000000000000000000000007835667
+    //0x0000000000000000000000000000000000000000000000000078356677835667
     
+
+    // contructs a course hash by joining both course id and address of sender
+    bytes32 courseHash = keccak256(abi.encodePacked(courseId, msg.sender));
+
+    // 
+    if(hasCourseOwnership(courseHash)) {
+      revert CourseHasOwner();
+    }
+
+    uint id = totalOwnedCourses++;
+
     ownedCoursHash[id] = courseHash;
     ownedCourses[courseHash] = Course({
       id: id,
@@ -39,8 +73,47 @@ contract CourseMarketplace {
       owner: msg.sender,
       state: State.Purchased
     });
-
-
   
+  }
+
+
+  // Transfer ownership from owner to buyer
+  function transferOwnership(address newOwner) external onlyOwner{
+    setContractOwner(newOwner);
+  }
+
+  // get number of purchased courses
+  function getCourseCount() external view returns(uint) {
+
+    return totalOwnedCourses;
+  }
+
+  // get the course hash at specific index
+  function getCourseHashAtIndex(uint index) external view returns (bytes32) {
+
+    return ownedCoursHash[index];
+  }
+
+  // get course index, details by the hash
+  function getCourseByHash(bytes32 courseHash) external view returns(Course memory) {
+
+    return ownedCourses[courseHash];
+  }
+
+
+  // Retrieve contract owner
+  function getContractOwner() public view returns(address) {
+    return owner;
+  }
+
+  function setContractOwner(address newOwner) private {
+
+    owner = payable(newOwner);
+  }
+
+  // checking for pre existing course hash inorder not to create same courseHash twice
+  function hasCourseOwnership(bytes32 courseHash) private view returns(bool){
+
+    return ownedCourses[courseHash].owner == msg.sender;
   }
 }
