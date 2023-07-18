@@ -24,3 +24,284 @@ export default Marketplace({courses}) {
           }}/>
     )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//=======Testing out console on terminal====//
+// truffle console
+
+    //Assign instance to the Faucet app using
+        //const instance = await Faucet.deployed()
+        //console instance to get the properties
+
+    // Assign a variable using instance and console
+        //const funds = await instance.funds()
+        //funds
+
+    // Can check for further properties of a variable
+        //funds.toString
+        //funds.toNumber
+
+
+    // access a variable
+        //const funds = await instance.methods.funds().call()
+        //funds
+
+    // access accounts
+        //accounts
+
+    // send tx
+        // web3.eth.sendTransaction({from:accounts[0], to:"0x..", value:"1000000000000000000"})
+        //-NOTE: value is in wei
+
+    // getBlock information
+    //web3.eth.getBlock("9")
+
+
+    //Get Storage info
+    --At SLot 0 => web3.eth.getStorageAt("0x63529fc60F1FF2D27DAf83C3A7221F917FBb351F", 0)
+
+    --At slot 1 => web3.eth.getStorageAt("0x63529fc60F1FF2D27DAf83C3A7221F917FBb351F", 1)
+    
+
+//========== web3.js
+    -- collections of libs that allows you connect with a local or remote ethereum node.
+
+    --using web3.js to console(access methods)
+        // set an instance
+            // const instance = new web3.eth.Contract(Faucet.abi, "0x4e72BF559d5718d8bB3065B8A4D6841E6D741da5")
+            //instance
+
+
+
+//============= Block info 
+// nonce - a hash that when combined with the mixHash proofs that
+// the Block has gone through POW(proof of work)
+1 byte = 8 bits
+
+// Operator Modulo
+/ how many times can number on the right goes into the left without a reminder
+6 % 2 => (2.3 = 6) and then 6-6 = 0
+5 % 2 => (2.2 = 4) therefore 5-4 = 1
+7 % 3 => (3.2 = 6) therefore 7-6 = 1
+7 % 4 => (4.1 = 4) therefore 7-4 = 3
+//
+3 % 9 => (9.0 = 0) therefore 3-0 = 3
+7 % 15 => (15.0 = 0) therefore 7-0 = 7
+//
+9 % 9 => (9.0 = 0) therefore 9-9 = 0
+
+///////////////////////////////////////////////////////////////////////
+
+//note: 
+    --unless you specify that a function is payable, you wont be able to send funds.
+    --each time we make changes to our contract, we will have to reset our ganache with truffle migrate --reset.
+    -- while calling by signature(data), we use the keccak256 and select the first 4 bytes
+
+    -- we can specify a function to be either-
+    pure or view - read only call(no gas fee)
+        -view: the function will not alter the storage state in any way.
+        -pure: this is more strict, indicating that it wont even read the storage state. 
+    that the contract will not be used for transactions but for computations.
+
+    Transactions (can generate state changes) and requires gas fee
+    read only call(no gas fee)
+
+
+    //Pushing to github
+    -- git add .
+    -- git commit -m 'the changes made'
+    -- git push
+
+
+////////////////////////////////////////////////////////////////////
+
+
+//Dedicated function to Add funds
+    //we will have to reset our ganache with truffle migrate --reset
+    //An then initialize our truffle all over Again.
+        truffle console
+        const instance = await Faucet.deployed()
+    // call our add funds function
+        instance.addFunds({value:""})
+    
+    
+//Call function by signature
+    //we use the web3 library
+        web3.eth.sendTransaction({from:accounts[0], to:"0x..", data:"", value:"1000000000000000000"})
+
+
+
+
+// To talk to the node on the network you can make JSON-RPC http calls(Method calls using json rpc)
+
+    --launch postman
+    --set the request to POST
+    --Enter the url from ganache
+    --Go to the body
+    --Select Raw
+    --Select JSON
+    --Use the methods you need from the documentation- https://ethereum.org/en/developers/docs/apis/json-rpc/
+    --CLick on send
+    *Voila!!!
+
+//========Funders
+    //---Funders(creating arrays for storage)
+    --const instance = await Faucet.deployed()
+    --instance.addFunds({value: "1000000000000000000", from:accounts[0]})
+
+    //Get address of each funders from the arrays   
+    --instance.funders(0)
+
+    //Get address of ALL funders at once
+    --instance.getAllFunders()
+        
+
+
+
+// Difference between external and public functions
+    --external functions cannot be called inside of a function while public can be called
+
+
+// Memory and data storage in solidity
+    --test: 
+
+    to be continued...
+
+/////////////////////// STORAGE  
+    --storage has multiple slots
+    --each slots can allow up to 32bytes before allocating to the next slot
+        -- Get Storage info =>
+            --At SLot 0 => web3.eth.getStorageAt("0x63529fc60F1FF2D27DAf83C3A7221F917FBb351F", 0)
+            --At slot 1 => web3.eth.getStorageAt("0x63529fc60F1FF2D27DAf83C3A7221F917FBb351F", 1)
+
+    
+    --//////// GET STORAGE WHEN MAPPING
+    -- find the hash of the keccak256
+        --each key has 32bytes and each slot also has 32bytes
+        Get the keccak hash of the key =>
+            //--Key=> 0000000000000000000000000000000000000000000000000000000000000002
+            //--slot=>0000000000000000000000000000000000000000000000000000000000000000
+        
+        Get storage value when Mapping ===> 
+            // At SLot 0 => 
+                //=> 0x00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000
+                //--Hash => abbb5caa7dda850e60932de0934eb1f9d0f59695050f761dc64e443e5030a569
+
+                //=> web3.eth.getStorageAt("0x63529fc60F1FF2D27DAf83C3A7221F917FBb351F", "0xabbb5caa7dda850e60932de0934eb1f9d0f59695050f761dc64e443e5030a569")
+
+            // At SLot 1 => 
+                //-> 0x0000000000000000000000001275BAF49381E3D85321f59D143d84243e9168Af0000000000000000000000000000000000000000000000000000000000000000
+                //--Hash => 3285af548ebe6775c566baaf48dfb60482ae0a0e4d440ab7d64ae37be9acbe19
+                
+                // => web3.eth.getStorageAt("0x63529fc60F1FF2D27DAf83C3A7221F917FBb351F", "0x3285af548ebe6775c566baaf48dfb60482ae0a0e4d440ab7d64ae37be9acbe19")
+
+
+--/////ARRAY STORAGE////////////////
+    --To get array storage length
+            --web.eth.getStorageAt("0x63529fc60F1FF2D27DAf83C3A7221F917FBb351F", 2)
+
+
+
+    --To get array storage Index        
+        -- keccak256(slot) + index of the item
+
+            --keccak256(slot)  
+                => convert slot hex(32bytes) to hash
+                Hex => 0000000000000000000000000000000000000000000000000000000000000002
+                Hash => 0x405787fa12a823e0f2b7631cc41b3ba8828b3321ca811111fa75cd3aa3bb5ace
+
+            --Array index [0]
+                Hash + Index
+                -- (Hash to Decimal) => 
+                29102676481673041902632991033461445430619272659676223336789171408008386403022 + 0
+            =====>>> Hash => 0x405787fa12a823e0f2b7631cc41b3ba8828b3321ca811111fa75cd3aa3bb5ace
+
+                --web.eth.getStorageAt("0x63529fc60F1FF2D27DAf83C3A7221F917FBb351F", " 0x405787fa12a823e0f2b7631cc41b3ba8828b3321ca811111fa75cd3aa3bb5ace")
+
+            --Array index [1]
+                Hash + Index
+                -- (Hash to Decimal) => 29102676481673041902632991033461445430619272659676223336789171408008386403022 + 1
+            =====>>> Hash => 0x405787FA12A823E0F2B7631CC41B3BA8828B3321CA811111FA75CD3AA3BB5ACF
+            
+                --web.eth.getStorageAt("0x63529fc60F1FF2D27DAf83C3A7221F917FBb351F", " 0x405787FA12A823E0F2B7631CC41B3BA8828B3321CA811111FA75CD3AA3BB5ACF")
+                
+
+
+
+// Private and Internal Functions   
+
+
+
+
+
+//request metamask API to connect with our browser
+  --const accounts = await window.ethereum.request({method: "eth_requestAccounts"})
+        console.log(accounts)
+
+// integrate web3
+    --npm install web3
+    --import into app.js <import web3 from "web3";>
+
+// crete a useEffect with an if statement to check if our browser has the metamask APIs
+
+
+// structure our build folders
+    --change build directory in our truffle-config.js to contracts_build_directory: "./public/contracts",
+    --Move all build folders to public by deleting the build folder and resetting truffle
+
+// create a utils className
+    --load-contract.js
+
+// get contract abstraction using..
+    --npm install @truffle/contract
+    --create a loadContract functions to get our functions into javascript
+    --create a variable in App.js to hold the loaded functions
+
+// getting the balance function
+    --set a new state
+    --const [ balance, setBalance] = useState(null)
+
+    --create useEffect to update the values
+    --useEffect( ()=> {
+        const loadBalance = async () => {
+            const { contract, web3} = web3.api
+            const balance = await web3.eth.getBalance(contract.address)
+
+            setBalance(balance)
+        }
+
+        web3Api.contract && loadBalance()
+    }, [web3Api])
+
+
+// set the web3 wei balance to eth
+    --setBalance(web3.utils.fromWei(balance, "ether"))
+
+
+// Add funds   
+    --create a useCallback
+    --declare the dependencies
+
+
+// Automatically refresh the browser when an event is triggered
+    --add [window.location.reload()] to the event we want a reload on
+
+    --or create a state variable
+    const [shouldReload, reload] = useState(false)
+    const reloadEffect = () => reload(!shouldReload)
+    -- and add the //reload() to the variable
+
+    //setAccountListeners - is a metamask event handler to make refresh

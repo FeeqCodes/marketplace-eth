@@ -38,10 +38,14 @@ export const handler =( web3, provider ) => () => {
   }, [provider])
 
 
-  return { account: {
+  return {
+    // without using enhance hooks
+    // account: {
+    // }
+
     data,
     isAdmin: (data && adminAddresses[data]) ?? false,
-    mutate, 
-    ...rest
-  } }
+    mutate,
+    ...rest,
+  };
 }

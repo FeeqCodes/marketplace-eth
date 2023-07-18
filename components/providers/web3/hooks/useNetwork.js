@@ -15,7 +15,7 @@ const NETWORKS = {
 const targetNetwork = NETWORKS[process.env.NEXT_PUBLIC_TARGET_CHAIN_ID]
 
 export const handler = (web3, provider) => () => {
-  const { data, error, mutate, ...rest } = useSWR(
+  const { data, mutate, ...rest } = useSWR(
     () => (web3 ? "web3/network" : null),
     async () => {
       const chainId = Number(await window.ethereum.request({ method: 'eth_chainId' }));
@@ -29,20 +29,21 @@ export const handler = (web3, provider) => () => {
     // provider && provider.on("chainChanged", chainId => mutate(chainId));
     
     provider &&
-    provider.on("chainCHanged", chainId => {
+    provider.on("chainChanged", chainId => {
         mutate(NETWORKS[parseInt(chainId, 16)])
     } )
 
   }, [web3]);
 
   return {
-    network: {
-      data,
-      hasFirstResponse: data || error,
-      mutate,
-      target: targetNetwork,
-      isSupported: data === targetNetwork,
-      ...rest,
-    },
+    // without using enhance Hooks
+    // network: {
+    // }
+
+    data,
+    mutate,
+    target: targetNetwork,
+    isSupported: data === targetNetwork,
+    ...rest,
   };
 };
