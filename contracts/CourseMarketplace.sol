@@ -40,7 +40,7 @@ contract CourseMarketplace {
   }
 
   ///Course has invalid state
-  error invalidState()
+  error invalidState();
 
   ///Course has not been created
   error CourseIsNotCreated()
@@ -95,7 +95,7 @@ contract CourseMarketplace {
       revert CourseIsNotCreated();
     }
 
-    course storage course = ownedCourses[courseHash]
+    Course storage course = ownedCourses[courseHash]
 
     if (course.state != State.Purchased) {
       
@@ -103,7 +103,33 @@ contract CourseMarketplace {
     }
 
 
-    course.state = State.Activated
+    course.state = State.Activated;
+  }
+
+
+
+  // Admin access to deactivate course
+  function deactivateCourse(bytes32 courseHash) external onlyOwner {
+
+    if(!isCourseCreated(courseHash)) {
+
+      revert CourseIsNotCreated();
+    }
+
+    Course storage course = ownedCourses[courseHash]
+
+    if (course.state != State.Purchased) {
+      
+      revert invalidState();
+    };
+
+    // we return the buyers money if we deactivate his purchased course
+    (bool success, ) = course.owner.call{value: course.price}("");
+    require(success, "Transfer failed");
+
+
+    course.state = State.Deactivated;
+    course.price = 0;
   }
 
 
@@ -144,7 +170,7 @@ contract CourseMarketplace {
   // chcek if course exist
   function isCourseCreated(bytes32 courseHash) private view return(bool){
 
-    return ownedCourses[courseHash].owner != 0x0000000000000000000000000000000000000000
+    return ownedCourses[courseHash].owner != 0x0000000000000000000000000000000000000000;
   }
 
   // checking for pre existing course hash inorder not to create same courseHash twice
