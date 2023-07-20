@@ -6,13 +6,14 @@ export const COURSE_STATES = {
   2: "deactivated",
 };
 
-export const normalizeOwnedCourse = () => (course, ownedCourse) => {
+export const normalizeOwnedCourse = (web3) => (course, ownedCourse) => {
+
   return {
     ...course,
-    ownedCourseId: ownedCourse.id,
+    ownedCourseId: Number(ownedCourse.id),
     proof: ownedCourse.proof,
     owned: ownedCourse.owner,
-    price: ownedCourse.price,
+    price: web3.utils.fromWei(ownedCourse.price, 'ether'),
     state: COURSE_STATES[ownedCourse.state],
   };
 };

@@ -1,12 +1,36 @@
-import { useHooks } from "@components/providers/web3";
+import { useHooks, useWeb3 } from "@components/providers/web3";
+import { useRouter } from "next/dist/client/router";
+import { useEffect } from "react";
 
+
+// getting the state of our website when theres empty data
+const _isEmpty = data => {
+
+  return (
+    data == null ||
+    data === "" ||
+    (Array.isArray(data) && data.length === 0) ||
+    (data.constructor === Object && Object.keys(data).length === 0)
+  )
+}
+
+
+// we use the enhance hook to wrap all our hooks
 const enhanceHook = (swrRes) => {
+
+  const { data, error} = swrRes
+  const hasFirstResponse = (!!data || error)
+  const isEmpty = hasFirstResponse && _isEmpty(data)
+
   return {
-    ...swrRes,
     // hasInitialResponse: swrRes.data || swrRes.error,
-    hasFirstResponse: swrRes.data || swrRes.error,
+    ...swrRes,
+    isEmpty,
+    hasFirstResponse
   };
 };
+
+
 
 export const useNetwork = () => {
   const swrRes = enhanceHook(useHooks((hooks) => hooks.useNetwork)());
@@ -22,6 +46,24 @@ export const useAccount = () => {
     account: swrRes,
   };
 };
+
+export  const useAdmin = ({redirectTo}) => {
+  const {account} = useAccount()
+  const { requireInstall } = useWeb3()
+  const router = useRouter()
+
+  useEffect(()=> {
+    if (
+      (requireInstall || account.hasFirstResponse && !account.isAdmin) || account.isEmpty
+    ) {
+
+      router.push(redirectTo)
+    }
+  }, [account])
+
+  return { account }
+}
+
 
 // we receive the params passed from owned.js as (...args)
 export const useOwnedCourses = (...args) => {
@@ -46,6 +88,17 @@ export const useOwnedCourse = (...args) => {
     ownedCourse: swrRes,
   };
 };
+
+
+// Extract all purchased courses to the manage course page
+export const useManagedCourses = (...args) => {
+  const swrRes = enhanceHook(useHooks(hooks => hooks.useManagedCourses)(...args))
+
+  return {
+    managedCourses: swrRes
+  }
+}
+
 
 // =========Without using enhance hooks
 // export const useNetwork = () => {

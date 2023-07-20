@@ -225,6 +225,7 @@ import { useWeb3 } from "@components/providers";
 
 
 export default function Marketplace({ courses }) {
+  
   const { web3, contract } = useWeb3();
   const { canPurchaseCourse, account } = useWalletInfo();
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -313,5 +314,9 @@ export function getStaticProps() {
     },
   };
 }
+
+
+
+
 
 Marketplace.Layout = BaseLayout;

@@ -1,4 +1,5 @@
 import { useAccount, useOwnedCourse } from "@components/hooks/web3";
+import { useWeb3 } from "@components/providers";
 import { Message, Modal } from "@components/ui/common";
 import { CourseHero, Curriculum, Keypoints } from "@components/ui/course";
 import { BaseLayout } from "@components/ui/layout";
@@ -6,6 +7,7 @@ import { BaseLayout } from "@components/ui/layout";
 import { getAllCourses } from "@content/courses/fetcher";
 
 export default function Course({ course }) {
+  const { isLoading } = useWeb3()
   const { account } = useAccount();
 
   // pass it to the ownedCourse
@@ -13,8 +15,15 @@ export default function Course({ course }) {
   console.log(ownedCourse);
   // get course state
   const courseState = ownedCourse.data?.state;
-  // Checking other states
-  // const courseState = "activated"
+  // Checking other states[Hand coded]
+  // const courseState = "deactivated"
+
+  // create instance and pass to the curriculum[locked]
+  const isLocked = 
+  !courseState ||
+  courseState === "purchased" || 
+  courseState === "deactivated" 
+  // courseState == null
 
   return (
     <>
@@ -62,7 +71,11 @@ export default function Course({ course }) {
         </div>
       )}
 
-      <Curriculum locked={true} />
+      <Curriculum 
+        isLoading={isLoading}
+        locked={isLocked} 
+        courseState={courseState}
+      />
       <Modal />
     </>
   );

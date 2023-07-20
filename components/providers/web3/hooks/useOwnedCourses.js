@@ -40,7 +40,7 @@ export const handler = (web3, contract) => (courses, account) => {
           ownedCourse.owner !== "0x0000000000000000000000000000000000000000"
         ) {
         
-          const normalized = normalizeOwnedCourse()(course, ownedCourse)
+          const normalized = normalizeOwnedCourse(web3)(course, ownedCourse)
 
           ownedCourses.push(normalized)
         }

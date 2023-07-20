@@ -196,6 +196,7 @@ contract CourseMarketplace {
     uint256 id = totalOwnedCourses++;
 
     ownedCourseHash[id] = courseHash;
+    
     ownedCourses[courseHash] = Course({
       id: id,
       price: msg.value,
