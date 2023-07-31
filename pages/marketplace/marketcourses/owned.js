@@ -18,6 +18,7 @@ export default function OwnedCourses({ courses }) {
   // pass the courses and account to the useOwnedCourses
   const { ownedCourses } = useOwnedCourses(courses, account.data);
   console.log(ownedCourses.data)
+  
   // display error message when no metamask is detected
   const { requireInstall } = useWeb3();
 

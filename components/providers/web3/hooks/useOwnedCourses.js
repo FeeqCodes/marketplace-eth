@@ -50,5 +50,14 @@ export const handler = (web3, contract) => (courses, account) => {
     }
   );
 
-  return swrRes;
+
+  // destructuring swrRes and creating  a look up table to check for owned courses in marketplace
+  return {
+    ...swrRes,
+    lookup: swrRes.data?.reduce((a, c) => {
+      a[c.id] = c 
+
+      return a
+    }, {}) ?? {}
+  };
 };

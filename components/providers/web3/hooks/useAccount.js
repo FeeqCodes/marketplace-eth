@@ -3,6 +3,9 @@ import useSWR from "swr";
 
 const adminAddresses = {
   "0xdDa2274b467b9589FB9EE651454E0e3C34E22Eac": true,
+
+  // use as admin for sopolia testnet
+  "0x596bDbDfc513c4085d26339910151B8FF2395394": true,
 };
 
 export const handler = (web3, provider) => () => {

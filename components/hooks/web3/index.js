@@ -114,9 +114,14 @@ export const useWalletInfo = () => {
   const { account } = useAccount();
   const { network } = useNetwork();
 
+  // determine when account and network is loading
+  const isConnecting = !account.hasFirstResponse &&
+  !network.hasFirstResponse
+  
   return {
     account,
     network,
+    isConnecting,
     canPurchaseCourse: !!(account.data && network.isSupported),
   };
 };

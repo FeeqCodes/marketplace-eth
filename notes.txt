@@ -305,3 +305,41 @@ export default Marketplace({courses}) {
     -- and add the //reload() to the variable
 
     //setAccountListeners - is a metamask event handler to make refresh
+
+
+
+
+    deploying to test network-
+        create a key.json
+        use necessary infura end points
+    connect to sepolia test network 
+        truffle console --network sepolia
+    get Mnemonic accounts
+        const accounts = await web3.eth.getAccounts() 
+        accounts
+    get Balance 
+        await web3.eth.getBalance(accounts[0])
+    Migrate and deploy network
+       truffle migrate --network sepolia 
+    
+
+    Transfer ownership
+        -> truffle console --network sepolia
+    create an instance 
+        -> const instance = await CourseMarketplace.deployed()
+        -> instance
+    Transfer to ganache the accounts
+        -> instance.transferOwnership("0xdDa2274b467b9589FB9EE651454E0e3C34E22Eac", {from: accounts[0]})
+    get contract owner
+        -> instance.getContractOwner()
+
+
+push project to production
+    -> npm run build
+Run production  
+    -> npm start
+
+    
+
+contract owner = 0x596bDbDfc513c4085d26339910151B8FF2395394
+truffle deploy --network sepolia --verbose-rpc --interactive --skip-dry-run --reset
